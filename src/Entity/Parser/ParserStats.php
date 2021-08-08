@@ -11,34 +11,44 @@ use Doctrine\ORM\Mapping as ORM;
 class ParserStats extends BaseEntity
 {
     /**
-     * @ORM\Column(type="string")
+     * @param Parser $parser
      */
-    protected string $type;
+    public function __construct(Parser $parser)
+    {
+        parent::__construct();
+        $this->parser = $parser;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->duration;
+    }
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Parser::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    protected Parser $parser;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
     protected ?int $duration;
 
-    public function __toString(): string
+    /**
+     * @return Parser
+     */
+    public function getParser(): Parser
     {
-        return $this->duration;
+        return $this->parser;
     }
 
     /**
-     * @return string
+     * @param Parser $parser
      */
-    public function getType(): string
+    public function setParser(Parser $parser): void
     {
-        return $this->type;
-    }
-
-    /**
-     * @param string $type
-     */
-    public function setType(string $type): void
-    {
-        $this->type = $type;
+        $this->parser = $parser;
     }
 
     /**
