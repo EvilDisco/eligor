@@ -15,14 +15,24 @@ trait TimestampableEntityTrait
      *
      * @ORM\Column(type="datetime")
      */
-    protected DateTimeInterface $dateCreate;
+    protected DateTimeInterface $createdAt;
 
     /**
      * @var DateTimeInterface
      *
      * @ORM\Column(type="datetime")
      */
-    protected DateTimeInterface $dateUpdate;
+    protected DateTimeInterface $updatedAt;
+
+    public function getCreatedAt(): ?DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
 
     /**
      * this method should be called from constructor.
@@ -30,21 +40,11 @@ trait TimestampableEntityTrait
     private function initDates()
     {
         try {
-            $this->dateCreate = new DateTimeImmutable();
-            $this->dateUpdate = new DateTimeImmutable();
+            $this->createdAt = new DateTimeImmutable();
+            $this->updatedAt = new DateTimeImmutable();
         } catch (Exception $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
-    }
-
-    public function getDateUpdate(): ?DateTimeInterface
-    {
-        return $this->dateUpdate;
-    }
-
-    public function getDateCreate(): ?DateTimeInterface
-    {
-        return $this->dateCreate;
     }
 
     /**
@@ -54,8 +54,7 @@ trait TimestampableEntityTrait
     public function preUpdate(): void
     {
         try {
-            $now = new DateTimeImmutable();
-            $this->dateUpdate = $now;
+            $this->updatedAt = new DateTimeImmutable();
         } catch (Exception $e) {
             throw new InvalidArgumentException($e->getMessage());
         }
