@@ -3,10 +3,8 @@
 namespace App\Service;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Panther\Client;
-use Symfony\Component\HttpFoundation\Request;
 
-class HtmlParserService
+class CurlParser
 {
     public function __construct(
         protected CurlService $curlService

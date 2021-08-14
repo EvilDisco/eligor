@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\HtmlParserService;
+use App\Service\CurlParser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +15,7 @@ final class TestCurlParserCommand extends Command
     private const SEARCH_TAG_PARAM = 'search_tag';
 
     public function __construct(
-        private HtmlParserService $htmlParser
+        private CurlParser $curlParser
     ) {
         parent::__construct();
     }
@@ -44,7 +44,7 @@ final class TestCurlParserCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $url = $input->getArgument(self::URL_PARAM);
-        $page = $this->htmlParser->getPageContentViaCurl($url);
+        $page = $this->curlParser->getPageContentViaCurl($url);
         if (!$page) {
             $io->warning('Cannot open page for parsing.');
 
