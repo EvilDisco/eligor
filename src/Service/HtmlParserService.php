@@ -7,8 +7,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class HtmlParserService
 {
     public function __construct(
-        protected CurlService $curlService,
-        protected PhantomJsService $phantomJsService
+        protected CurlService $curlService
     ) {}
 
     public function getPageContentViaCurl(string $url, bool $isRawResponse = false): bool|string|Crawler
@@ -30,18 +29,5 @@ class HtmlParserService
     public function getHtmlDomFromString(string $string): Crawler
     {
         return new Crawler($string);
-    }
-
-    public function getPageContentViaPhantomJs(string $url, bool $isRawResponse = false): string|Crawler
-    {
-        $phantomJsResponse = $this->phantomJsService->getPhantomjsResponse($url);
-
-        $response = $phantomJsResponse->getContent(); // TODO: в phantomJsService
-
-        if (false === $isRawResponse) {
-            $response = $this->getHtmlDomFromString($response);
-        }
-
-        return $response;
     }
 }
