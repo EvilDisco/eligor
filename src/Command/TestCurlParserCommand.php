@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class TestParserCommand extends Command
+final class TestCurlParserCommand extends Command
 {
     private const URL_PARAM = 'url';
     private const SEARCH_TAG_PARAM = 'search_tag';
@@ -23,7 +23,7 @@ final class TestParserCommand extends Command
     public function configure()
     {
         $this
-            ->setName('parser:test')
+            ->setName('parser:curl:test')
             ->setDescription('test curl parser')
             ->setDefinition(array())
             ->addArgument(
