@@ -20,13 +20,13 @@ class HtmlParserService
         $response = $this->curlService->getCurlResponse($curl);
 
         if (false === $isRawResponse) {
-            $response = $this->getHtmlDomFromString($response);
+            $response = $this->getDomFromString($response);
         }
 
         return $response;
     }
 
-    public function getHtmlDomFromString(string $string): Crawler
+    public function getDomFromString(string $string): Crawler
     {
         return new Crawler($string);
     }
