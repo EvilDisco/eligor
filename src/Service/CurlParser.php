@@ -30,11 +30,4 @@ class CurlParser
     {
         return new Crawler($string);
     }
-
-    public function getPageContentViaPanther(string $url): Crawler
-    {
-        $client = Client::createChromeClient();
-
-        return $client->request(Request::METHOD_GET, $url);
-    }
 }
