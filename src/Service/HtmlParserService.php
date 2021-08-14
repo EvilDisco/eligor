@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Panther\Client;
+use Symfony\Component\HttpFoundation\Request;
 
 class HtmlParserService
 {
@@ -29,5 +31,12 @@ class HtmlParserService
     public function getDomFromString(string $string): Crawler
     {
         return new Crawler($string);
+    }
+
+    public function getPageContentViaPanther(string $url): Crawler
+    {
+        $client = Client::createChromeClient();
+
+        return $client->request(Request::METHOD_GET, $url);
     }
 }
