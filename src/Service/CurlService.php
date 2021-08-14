@@ -10,7 +10,12 @@ class CurlService
     private const CURL_MAX_REDIRECTS = 10;
     private const CURL_USERAGENT = 'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36';
 
-    public function runCurl(string $url, int $restarts = self::CURL_RESTARTS): bool|array
+    public function getCurlFullResponse(string $url): bool|array
+    {
+        return $this->runCurl($url);
+    }
+
+    private function runCurl(string $url, int $restarts = self::CURL_RESTARTS): bool|array
     {
         if (!extension_loaded('curl')) {
             echo 'You need to load/activate the curl extension.' . PHP_EOL;
@@ -64,5 +69,15 @@ class CurlService
             'response' => $response,
             'error' => $error,
         ];
+    }
+
+    public function getFinalUrl(array $curl): string
+    {
+        return $curl['final_url'];
+    }
+
+    public function getCurlResponse(array $curl): string
+    {
+        return $curl['response'];
     }
 }
