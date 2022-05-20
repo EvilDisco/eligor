@@ -16,7 +16,8 @@ final class TestCurlParserCommand extends Command
 
     public function __construct(
         private CurlParser $curlParser
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -34,7 +35,8 @@ final class TestCurlParserCommand extends Command
             ->addArgument(
                 self::SEARCH_TAG_PARAM,
                 InputArgument::OPTIONAL,
-                'Set HTML tag for search on page'
+                'Set HTML tag for search on page',
+                'title'
             )
         ;
     }
@@ -52,16 +54,21 @@ final class TestCurlParserCommand extends Command
         }
 
         $searchTag = $input->getArgument(self::SEARCH_TAG_PARAM);
-        if ($searchTag) {
-            $parseResult = $page->filter($searchTag)->first();
-            if (false === $parseResult) {
-                $io->warning('Page is parsed, tag is not found.');
-            }
+        $parseResult = $page->filter($searchTag)->first();
+        if (false === $parseResult) {
+            $io->warning(sprintf(
+                'Page is parsed, tag %s is not found.',
+                $searchTag
+            ));
 
-            $io->success(sprintf('Page is parsed, tag is found on page: %s', $parseResult->text()));
-        } else {
-            $io->success(sprintf('Page is parsed, page title: %s', $page->filter('title')->text()));
+            return Command::INVALID;
         }
+
+        $io->success(sprintf(
+            'Page is parsed, tag found: %s = %s',
+            $searchTag,
+            $parseResult->text()
+        ));
 
         return Command::SUCCESS;
     }
