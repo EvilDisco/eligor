@@ -26,6 +26,12 @@ class FileLink extends BaseEntity
      */
     protected string $title;
 
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    protected bool $isDownloaded = false;
+
     public function __construct(
         string $link,
         string $title,
@@ -65,5 +71,21 @@ class FileLink extends BaseEntity
     public function setTitle(string $title): void
     {
         $this->title = $title;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDownloaded(): bool
+    {
+        return $this->isDownloaded;
+    }
+
+    /**
+     * @param bool $isDownloaded
+     */
+    public function setIsDownloaded(bool $isDownloaded): void
+    {
+        $this->isDownloaded = $isDownloaded;
     }
 }
