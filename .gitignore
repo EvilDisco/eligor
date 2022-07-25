@@ -17,4 +17,5 @@
 ###> custom ###
 .idea
 /drivers
+/public/uploads
 ###< custom ###
