@@ -67,8 +67,6 @@ final class Mp3iqDownloadCommand extends Command
 
             if ($this->downloader->download($io, $fileLink->getLink(), $fileLink->getTitle())) {
                 $this->fileLinkService->markAsDownloaded($fileLink);
-            } else {
-                $io->text("404 on file, we'll get it later...");
             }
 
             sleep(3);

@@ -48,6 +48,8 @@ class Mp3iqDownloader
         try {
             $guzzle->get($remotePath);
         } catch (Exception $e) {
+            $io->text('Oh no! ' . $e->getMessage());
+
             return false;
         }
 
