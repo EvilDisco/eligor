@@ -61,6 +61,11 @@ final class Mp3iqDownloadCommand extends Command
 
         $limit = (int) $input->getOption(self::LIMIT_PARAM);
         $fileLinks = $this->fileLinkService->getNotDownloaded($limit);
+
+        if (count($fileLinks) === 0) {
+            $io->text('All files are downloaded!');
+        }
+
         foreach ($fileLinks as $key => $fileLink) {
             /** @var FileLink $fileLink */
             $io->section($key + 1 . '. Download ' . $fileLink->getLink());
@@ -72,9 +77,11 @@ final class Mp3iqDownloadCommand extends Command
             sleep(3);
 
             $io->newLine(3);
-        }
 
-        $io->text('Still to go: ' . $this->fileLinkService->countNotDownloaded());
+            if ($key === array_key_last($fileLinks)) {
+                $io->text('Still to go: ' . $this->fileLinkService->countNotDownloaded());
+            }
+        }
 
         $io->success($this->getStopwatchInfo());
 
