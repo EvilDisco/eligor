@@ -20,9 +20,9 @@ class FileLink extends BaseEntity
     #[Assert\NotBlank]
     protected string $title;
 
-    /** @var bool */
-    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
-    protected bool $isDownloaded = false;
+    /** @var FileLinkStatusEnum */
+    #[ORM\Column(type: Types::STRING, enumType: FileLinkStatusEnum::class)]
+    protected FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded;
 
     public function __construct(
         string $link,
@@ -63,18 +63,18 @@ class FileLink extends BaseEntity
     }
 
     /**
-     * @return bool
+     * @return FileLinkStatusEnum
      */
-    public function isDownloaded(): bool
+    public function getStatus(): FileLinkStatusEnum
     {
-        return $this->isDownloaded;
+        return $this->status;
     }
 
     /**
-     * @param bool $isDownloaded
+     * @param FileLinkStatusEnum $status
      */
-    public function setIsDownloaded(bool $isDownloaded): void
+    public function setStatus(FileLinkStatusEnum $status): void
     {
-        $this->isDownloaded = $isDownloaded;
+        $this->status = $status;
     }
 }
