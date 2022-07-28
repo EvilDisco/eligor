@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Mp3iq;
 
+use App\Service\FileService;
+use App\Service\FilesystemService;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;

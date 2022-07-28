@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Mp3iq;
 
 use App\Entity\Parser\FileLink;
+use App\Service\PantherParser;
 use Doctrine\ORM\EntityManagerInterface;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;

@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\Mp3iqParser;
+use App\Service\Mp3iq\Mp3iqParser;
 use App\Util\WatchableTrait;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;

@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Entity\Parser\FileLink;
 use App\Service\FileLinkService;
-use App\Service\Mp3iqDownloader;
+use App\Service\Mp3iq\Mp3iqDownloader;
 use App\Util\WatchableTrait;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Command\Command;
