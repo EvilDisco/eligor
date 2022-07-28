@@ -3,16 +3,22 @@
 namespace App\Entity\Parser;
 
 use App\Entity\BaseEntity;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- */
+#[ORM\Entity]
 class ParserStats extends BaseEntity
 {
-    /**
-     * @param Parser $parser
-     */
+    /** @param Parser $parser */
+    #[ORM\ManyToOne(targetEntity: Parser::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Parser $parser;
+
+    /** @param int|null $duration */
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    protected ?int $duration;
+
+    /** @param Parser $parser */
     public function __construct(Parser $parser)
     {
         parent::__construct();
@@ -23,17 +29,6 @@ class ParserStats extends BaseEntity
     {
         return (string) $this->duration;
     }
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Parser::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    protected Parser $parser;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    protected ?int $duration;
 
     /**
      * @return Parser

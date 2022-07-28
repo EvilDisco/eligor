@@ -3,28 +3,24 @@
 namespace App\Entity\LiveJournal;
 
 use App\Entity\BaseEntity;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="livejournal_post")
- * @ORM\Entity()
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'livejournal_post')]
 class Post extends BaseEntity
 {
-    /**
-     * @ORM\ManyToOne(targetEntity=Author::class)
-     * @ORM\JoinColumn(referencedColumnName="id", onDelete="CASCADE")
-    */
+    /** @param Author $author */
+    #[ORM\ManyToOne(targetEntity: Author::class)]
+    #[ORM\JoinColumn(referencedColumnName: 'id', onDelete: 'CASCADE')]
     protected Author $author;
 
-    /**
-     * @ORM\Column(type="string"): string
-     */
+    /** @param string $title */
+    #[ORM\Column(type: Types::STRING)]
     protected string $title;
 
-    /**
-     * @ORM\Column(type="text"): string
-     */
+    /** @param string $text */
+    #[ORM\Column(type: Types::TEXT)]
     protected string $text;
 
     public function __toString(): string

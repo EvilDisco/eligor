@@ -3,33 +3,25 @@
 namespace App\Entity\Parser;
 
 use App\Entity\BaseEntity;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table()
- * @ORM\Entity()
- */
+#[ORM\Entity]
 class FileLink extends BaseEntity
 {
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=500)
-     */
+    /** @var string */
+    #[ORM\Column(type: Types::STRING, length: 500)]
+    #[Assert\NotBlank]
     protected string $link;
 
-    /**
-     * @var string
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=500)
-     */
+    /** @var string */
+    #[ORM\Column(type: Types::STRING, length: 500)]
+    #[Assert\NotBlank]
     protected string $title;
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", options={"default": 0})
-     */
+    /** @var bool */
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => 0])]
     protected bool $isDownloaded = false;
 
     public function __construct(
@@ -41,9 +33,6 @@ class FileLink extends BaseEntity
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getLink(): string
     {
         return $this->link;

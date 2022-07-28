@@ -3,42 +3,24 @@
 namespace App\Entity\LiveJournal;
 
 use App\Entity\BaseEntity;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="livejournal_author")
- * @ORM\Entity()
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'livejournal_author')]
 class Author extends BaseEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected int $id;
-
-    /**
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
+    #[ORM\Column(type: Types::STRING)]
     protected string $name;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
+    #[ORM\Column(type: Types::STRING)]
     protected string $blog;
 
     public function __toString(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**

@@ -3,16 +3,13 @@
 namespace App\Entity\Parser;
 
 use App\Entity\BaseEntity;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity()
- */
+#[ORM\Entity]
 class Parser extends BaseEntity
 {
-    /**
-     * @param string $name
-     */
+    /** @param string $name */
     public function __construct(string $name)
     {
         parent::__construct();
@@ -24,22 +21,17 @@ class Parser extends BaseEntity
         return $this->name;
     }
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    /** @var string */
+    #[ORM\Column(type: Types::STRING)]
     protected string $name;
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
+    /** @param string $name */
     public function setName(string $name): void
     {
         $this->name = $name;
