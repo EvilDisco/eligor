@@ -58,12 +58,13 @@ class Mp3iqDownloader
         return $fileLocation;
     }
 
-    private function getFileLocation(string $filename): string
+    public function getDownloadFolder(): string
     {
-        return $this->fileService->getUploadDir()
-            . Mp3iqParser::PARSER_NAME
-            . DIRECTORY_SEPARATOR
-            . $filename
-        ;
+        return $this->fileService->getUploadDir() . Mp3iqParser::PARSER_NAME;
+    }
+
+    public function getFileLocation(string $filename): string
+    {
+        return self::getDownloadFolder() . DIRECTORY_SEPARATOR . $filename;
     }
 }
