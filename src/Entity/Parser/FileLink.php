@@ -10,6 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity]
 class FileLink extends BaseEntity
 {
+    /** @param Parser $parser */
+    #[ORM\ManyToOne(targetEntity: Parser::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    protected Parser $parser;
+
     /** @var string */
     #[ORM\Column(type: Types::STRING, length: 500)]
     #[Assert\NotBlank]
@@ -25,12 +30,30 @@ class FileLink extends BaseEntity
     protected FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded;
 
     public function __construct(
+        Parser $parser,
         string $link,
         string $title,
     ) {
         parent::__construct();
+        $this->parser = $parser;
         $this->link = $link;
         $this->title = $title;
+    }
+
+    /**
+     * @return Parser
+     */
+    public function getParser(): Parser
+    {
+        return $this->parser;
+    }
+
+    /**
+     * @param Parser $parser
+     */
+    public function setParser(Parser $parser): void
+    {
+        $this->parser = $parser;
     }
 
     public function getLink(): string
