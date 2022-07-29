@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\LiveJournal;
+namespace App\Entity\Livejournal;
 
 use App\Entity\BaseEntity;
 use Doctrine\DBAL\Types\Types;

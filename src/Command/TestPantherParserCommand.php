@@ -17,7 +17,7 @@ final class TestPantherParserCommand extends Command
     private const SEARCH_TAG_PARAM = 'search_tag';
 
     public function __construct(
-        private PantherParser $pantherParser
+        protected PantherParser $pantherParser
     ) {
         parent::__construct();
     }

@@ -15,7 +15,7 @@ final class TestCurlParserCommand extends Command
     private const SEARCH_TAG_PARAM = 'search_tag';
 
     public function __construct(
-        private CurlParser $curlParser
+        protected CurlParser $curlParser
     )
     {
         parent::__construct();
