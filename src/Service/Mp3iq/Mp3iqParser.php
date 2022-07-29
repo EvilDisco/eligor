@@ -44,6 +44,7 @@ class Mp3iqParser extends ParserService implements ParserInterface
         $crawler = $client->waitFor(self::PLAYLIST_EL);
 
         $fileLinks = $this->parseFileLinksFromPage($crawler);
+
         $this->fileLinkService->save($fileLinks);
     }
 
@@ -64,6 +65,11 @@ class Mp3iqParser extends ParserService implements ParserInterface
                 );
             })
         ;
+    }
+
+    public function getParser(): Parser
+    {
+        return parent::getParserByName(self::NAME);
     }
 
     public function getName(): string

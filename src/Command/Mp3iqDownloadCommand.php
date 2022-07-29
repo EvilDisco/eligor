@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Parser\FileLink;
 use App\Service\FileLinkService;
 use App\Service\Mp3iq\Mp3iqDownloader;
+use App\Service\Mp3iq\Mp3iqParser;
 use App\Util\WatchableTrait;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Command\Command;
@@ -22,6 +23,7 @@ final class Mp3iqDownloadCommand extends Command
 
     public function __construct(
         protected Mp3iqDownloader $downloader,
+        protected Mp3iqParser $parser,
         protected FileLinkService $fileLinkService,
     ) {
         parent::__construct();
@@ -59,8 +61,10 @@ final class Mp3iqDownloadCommand extends Command
 
         $this->startStopwatch();
 
+        $parser = $this->parser->getParser();
+
         $limit = (int) $input->getOption(self::LIMIT_PARAM);
-        $fileLinks = $this->fileLinkService->getNotDownloaded($limit);
+        $fileLinks = $this->fileLinkService->getNotDownloadedByParser($parser, $limit);
 
         if (count($fileLinks) === 0) {
             $io->text('All files are downloaded!');
@@ -79,7 +83,7 @@ final class Mp3iqDownloadCommand extends Command
             $io->newLine(3);
 
             if ($key === array_key_last($fileLinks)) {
-                $io->text('Still to go: ' . $this->fileLinkService->countNotDownloaded());
+                $io->text('Still to go: ' . $this->fileLinkService->countNotDownloadedByParser($parser));
             }
         }
 

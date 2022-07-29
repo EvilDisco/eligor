@@ -12,7 +12,7 @@ class ParserService
         protected PantherParser $pantherParser,
     ) {}
 
-    public function getParser(string $name): Parser
+    public function getParserByName(string $name): Parser
     {
         $parser = $this->em->getRepository(Parser::class)->findOneBy(['name' => $name]);
         if (!$parser) {
