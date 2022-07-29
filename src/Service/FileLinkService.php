@@ -34,4 +34,23 @@ class FileLinkService
     {
         return count($this->fileLinkRepo->findBy(['status' => FileLinkStatusEnum::NotDownloaded]));
     }
+
+    public function save(array|FileLink $data): void
+    {
+        $fileLinkRepo = $this->em->getRepository(FileLink::class);
+
+        if ($data instanceof FileLink) {
+            $this->em->persist($data);
+        } else {
+            foreach ($data as $datum) {
+                if ($fileLinkRepo->findOneBy(['link' => $datum->getLink()])) {
+                    continue;
+                }
+
+                $this->em->persist($datum);
+            }
+        }
+
+        $this->em->flush();
+    }
 }

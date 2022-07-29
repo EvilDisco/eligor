@@ -3,23 +3,34 @@
 namespace App\Service\Mp3iq;
 
 use App\Entity\Parser\FileLink;
+use App\Entity\Parser\Parser;
+use App\Service\FileLinkService;
 use App\Service\PantherParser;
+use App\Service\ParserInterface;
+use App\Service\ParserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\TimeoutException;
 use Symfony\Component\Panther\DomCrawler\Crawler;
 
-class Mp3iqParser
+class Mp3iqParser extends ParserService implements ParserInterface
 {
-    public const PARSER_NAME = 'Mp3iqParser';
+    public const NAME = 'Mp3iqParser';
 
     protected const BASE_URL = 'https://mp3iq.net/m/488415-pervyj-otryad-na-mayake';
     protected const PLAYLIST_EL = 'ul[class="playlist"]';
 
+    public Parser $parser;
+
     public function __construct(
-        protected PantherParser $pantherParser,
         protected EntityManagerInterface $em,
-    ) {}
+        protected PantherParser $pantherParser,
+        protected FileLinkService $fileLinkService,
+    )
+    {
+        parent::__construct($em, $pantherParser);
+        $this->parser = $this->getParser(self::getName());
+    }
 
     /**
      * @throws NoSuchElementException
@@ -33,7 +44,7 @@ class Mp3iqParser
         $crawler = $client->waitFor(self::PLAYLIST_EL);
 
         $fileLinks = $this->parseFileLinksFromPage($crawler);
-        $this->saveFileLinks($fileLinks);
+        $this->fileLinkService->save($fileLinks);
     }
 
     protected function getPageUrl(int $page): string
@@ -47,6 +58,7 @@ class Mp3iqParser
             ->filter('.track')
             ->each(function (Crawler $nodeCrawler) {
                 return new FileLink(
+                    $this->parser,
                     $nodeCrawler->attr('data-mp3'),
                     $nodeCrawler->filter('h2 em a')->text()
                 );
@@ -54,23 +66,8 @@ class Mp3iqParser
         ;
     }
 
-    protected function saveFileLinks(array $fileLinks): void
+    public function getName(): string
     {
-        $fileLinkRepo = $this->em->getRepository(FileLink::class);
-
-        foreach ($fileLinks as $fileLink) {
-            if ($fileLinkRepo->findOneBy(['link' => $fileLink->getLink()])) {
-                continue;
-            }
-
-            $this->em->persist($fileLink);
-        }
-
-        $this->em->flush();
-    }
-
-    public function getParserName(): string
-    {
-        return self::PARSER_NAME;
+        return self::NAME;
     }
 }
