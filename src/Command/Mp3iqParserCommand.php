@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\FileLinkService;
 use App\Service\Mp3iq\Mp3iqParser;
 use App\Util\WatchableTrait;
 use Facebook\WebDriver\Exception\NoSuchElementException;
@@ -20,7 +21,8 @@ final class Mp3iqParserCommand extends Command
     protected const PAGE_PARAM = 'page';
 
     public function __construct(
-        protected Mp3iqParser $parser
+        protected Mp3iqParser $parser,
+        protected FileLinkService $fileLinkService,
     ) {
         parent::__construct();
     }
@@ -59,7 +61,13 @@ final class Mp3iqParserCommand extends Command
         $this->startStopwatch();
 
         $page = (int) $input->getOption(self::PAGE_PARAM);
-        $this->parser->parseFileLinks($page);
+        $fileLinks = $this->parser->parseFileLinks($page);
+
+        if (count($fileLinks) > 0) {
+            $this->fileLinkService->save($fileLinks);
+        }
+
+        $io->text('Parsed links: ' . count($fileLinks));
 
         $io->newLine();
         $io->success($this->getStopwatchInfo());

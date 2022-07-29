@@ -4,7 +4,6 @@ namespace App\Service\Mp3iq;
 
 use App\Entity\Parser\FileLink;
 use App\Entity\Parser\Parser;
-use App\Service\FileLinkService;
 use App\Service\PantherParser;
 use App\Service\ParserInterface;
 use App\Service\ParserService;
@@ -25,27 +24,25 @@ class Mp3iqParser extends ParserService implements ParserInterface
     public function __construct(
         protected EntityManagerInterface $em,
         protected PantherParser $pantherParser,
-        protected FileLinkService $fileLinkService,
+
     )
     {
         parent::__construct($em, $pantherParser);
-        $this->parser = $this->getParser(self::getName());
+        $this->parser = $this->getParser();
     }
 
     /**
      * @throws NoSuchElementException
      * @throws TimeoutException
      */
-    public function parseFileLinks(?int $page = 1): void
+    public function parseFileLinks(?int $page = 1): ?array
     {
         $url = $this->getPageUrl($page);
 
         $client = $this->pantherParser->createGetRequest($url);
         $crawler = $client->waitFor(self::PLAYLIST_EL);
 
-        $fileLinks = $this->parseFileLinksFromPage($crawler);
-
-        $this->fileLinkService->save($fileLinks);
+        return $this->parseFileLinksFromPage($crawler);
     }
 
     protected function getPageUrl(int $page): string
@@ -53,7 +50,7 @@ class Mp3iqParser extends ParserService implements ParserInterface
         return self::BASE_URL . '/page/' . $page;
     }
 
-    protected function parseFileLinksFromPage(Crawler $crawler): array
+    protected function parseFileLinksFromPage(Crawler $crawler): ?array
     {
         return $crawler
             ->filter('.track')
