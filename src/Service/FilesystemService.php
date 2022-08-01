@@ -2,23 +2,21 @@
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FilesystemService
 {
+    public const WEB_DIR = 'web';
+
     public const KB = 'KB';
     public const MB = 'MB';
     public const GB = 'GB';
 
-    private Filesystem $filesystem;
-    private ContainerInterface $container;
-
-    public function __construct(Filesystem $filesystem, ContainerInterface $container)
-    {
-        $this->filesystem = $filesystem;
-        $this->container = $container;
-    }
+    public function __construct(
+        protected Filesystem $filesystem,
+        protected ParameterBagInterface $parameterBag
+    ) {}
 
     public function saveToFile(string $filePath, string $content): void
     {
@@ -63,16 +61,18 @@ class FilesystemService
 
     public function getRootDir(): string
     {
-         return $this->container->getParameter('kernel.root_dir');
+         return $this->parameterBag->get('kernel.root_dir');
     }
 
     public function getProjectDir(): string
     {
-         return $this->container->getParameter('kernel.project_dir');
+         return $this->parameterBag->get('kernel.project_dir');
     }
 
     public function getWebRootDir(): string
     {
-         return $this->container->getParameter('kernel.project_dir') . '/web';
+         return $this->parameterBag->get('kernel.project_dir')
+             . DIRECTORY_SEPARATOR
+             . self::WEB_DIR;
     }
 }
