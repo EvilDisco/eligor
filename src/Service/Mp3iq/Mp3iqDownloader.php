@@ -28,7 +28,7 @@ class Mp3iqDownloader
         $guzzle = new Client([
             'progress' => function ($total, $downloaded) use ($io, &$progress) {
                 if ($total > 0 && is_null($progress)) {
-                    $io->text('Size: ' . $this->filesystem->getReadableFilesize($total, FilesystemService::MB));
+                    $io->text('Size: ' . $this->filesystem->getReadableFilesize($total));
 
                     $progress = $io->createProgressBar($total);
                     $progress->start();
