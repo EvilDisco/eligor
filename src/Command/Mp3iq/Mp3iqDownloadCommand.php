@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Mp3iq;
 
 use App\Entity\Parser\FileLink;
 use App\Service\FileLinkService;

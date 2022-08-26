@@ -1,31 +1,32 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Test;
 
-use App\Service\CurlParser;
+use App\Service\PantherParser;
+use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\TimeoutException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class TestCurlParserCommand extends Command
+final class TestPantherParserCommand extends Command
 {
     private const URL_PARAM = 'url';
     private const SEARCH_TAG_PARAM = 'search_tag';
 
     public function __construct(
-        protected CurlParser $curlParser
-    )
-    {
+        protected PantherParser $pantherParser
+    ) {
         parent::__construct();
     }
 
     public function configure()
     {
         $this
-            ->setName('parser:curl:test')
-            ->setDescription('test curl parser')
+            ->setName('parser:panther:test')
+            ->setDescription('test panther parser')
             ->setDefinition(array())
             ->addArgument(
                 self::URL_PARAM,
@@ -41,33 +42,24 @@ final class TestCurlParserCommand extends Command
         ;
     }
 
+    /**
+     * @throws NoSuchElementException
+     * @throws TimeoutException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $url = $input->getArgument(self::URL_PARAM);
-        $page = $this->curlParser->getPageContentViaCurl($url);
-        if (!$page) {
-            $io->warning('Cannot open page for parsing.');
-
-            return Command::INVALID;
-        }
+        $client = $this->pantherParser->createGetRequest($url);
 
         $searchTag = $input->getArgument(self::SEARCH_TAG_PARAM);
-        $parseResult = $page->filter($searchTag)->first();
-        if (false === $parseResult) {
-            $io->warning(sprintf(
-                'Page is parsed, tag %s is not found.',
-                $searchTag
-            ));
-
-            return Command::INVALID;
-        }
+        $crawler = $client->waitFor($searchTag);
 
         $io->success(sprintf(
-            'Page is parsed, tag found: %s = %s',
+            'Page is parsed, %s = %s',
             $searchTag,
-            $parseResult->text()
+            $crawler->filter($searchTag)->first()->html()
         ));
 
         return Command::SUCCESS;
