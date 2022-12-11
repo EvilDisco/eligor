@@ -56,14 +56,6 @@ final class TestCurlParserCommand extends Command
 
         $searchTag = $input->getArgument(self::SEARCH_TAG_PARAM);
         $parseResult = $page->filter($searchTag)->first()->text(self::NOT_FOUND_TEXT);
-        if (self::NOT_FOUND_TEXT === $parseResult) {
-            $io->warning(sprintf(
-                'Page is parsed, tag %s is not found.',
-                $searchTag
-            ));
-
-            return Command::INVALID;
-        }
 
         $io->success(sprintf(
             'Page is parsed, tag found: %s = %s',

@@ -58,7 +58,7 @@ final class Mp3iqParserCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->startStopwatch($this->getName());
+        $this->startStopwatch();
 
         $page = (int) $input->getOption(self::PAGE_PARAM);
         $fileLinks = $this->parser->parseFileLinks($page);

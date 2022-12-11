@@ -15,6 +15,7 @@ final class TestPantherParserCommand extends Command
 {
     private const URL_PARAM = 'url';
     private const SEARCH_TAG_PARAM = 'search_tag';
+    private const NOT_FOUND_TEXT = 'tag is not found';
 
     public function __construct(
         protected PantherParser $pantherParser
@@ -55,11 +56,12 @@ final class TestPantherParserCommand extends Command
 
         $searchTag = $input->getArgument(self::SEARCH_TAG_PARAM);
         $crawler = $client->waitFor($searchTag);
+        $parseResult = $crawler->filter($searchTag)->first()->html(self::NOT_FOUND_TEXT);
 
         $io->success(sprintf(
             'Page is parsed, %s = %s',
             $searchTag,
-            $crawler->filter($searchTag)->first()->html()
+            $parseResult
         ));
 
         return Command::SUCCESS;
