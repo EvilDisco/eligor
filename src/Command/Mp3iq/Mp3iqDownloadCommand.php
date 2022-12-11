@@ -59,7 +59,7 @@ final class Mp3iqDownloadCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->startStopwatch();
+        $this->startStopwatch($this->getName());
 
         $parser = $this->parser->getParser();
 
