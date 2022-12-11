@@ -33,6 +33,7 @@ class Mp3iqParser extends ParserService implements ParserInterface
     /**
      * @throws NoSuchElementException
      * @throws TimeoutException
+     * @return array<int, FileLink>|null
      */
     public function parseFileLinks(?int $page = 1): ?array
     {
@@ -49,6 +50,9 @@ class Mp3iqParser extends ParserService implements ParserInterface
         return self::BASE_URL . '/page/' . $page;
     }
 
+    /**
+     * @return array<int, FileLink>|null
+     */
     protected function parseFileLinksFromPage(Crawler $crawler): ?array
     {
         return $crawler

@@ -34,22 +34,14 @@ trait TimestampableEntityTrait
      */
     private function initDates(): void
     {
-        try {
-            $this->createdAt = new DateTimeImmutable();
-            $this->updatedAt = new DateTimeImmutable();
-        } catch (Exception $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        }
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function preUpdate(): void
     {
-        try {
-            $this->updatedAt = new DateTimeImmutable();
-        } catch (Exception $e) {
-            throw new InvalidArgumentException($e->getMessage());
-        }
+        $this->updatedAt = new DateTimeImmutable();
     }
 }

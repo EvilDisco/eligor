@@ -6,7 +6,14 @@ class StringUtil
 {
     private const ENCODING = 'UTF-8';
 
-    public function mbStrReplace($search, $replace, $subject, &$count = 0)
+    /**
+     * @param array<int, string>|string $search
+     * @param array<int, string>|string $replace
+     * @param array<int, string>|string $subject
+     * @param int $count
+     * @return array<int, string>|string
+     */
+    public function mbStrReplace(array|string $search, array|string $replace, array|string $subject, int &$count = 0): array|string
     {
         if (!is_array($subject)) {
             // Normalize $search and $replace, so they are both arrays of the same length
@@ -28,7 +35,7 @@ class StringUtil
         return $subject;
     }
 
-    public function mbSubstrReplace($search, $replace, $start, $length, $encoding = self::ENCODING): string
+    public function mbSubstrReplace(string $search, string $replace, int $start, int $length, string $encoding = self::ENCODING): string
     {
 		$startString = mb_substr($search, 0, $start, $encoding);
 		$endString = mb_substr(
@@ -41,7 +48,7 @@ class StringUtil
         return $startString . $replace . $endString;
 	}
 
-    public function mbReplaceBetween($search, $replace, $start, $end, $encoding = self::ENCODING): string
+    public function mbReplaceBetween(string $search, string $replace, string $start, string $end, string $encoding = self::ENCODING): string
     {
         $pos = mb_strpos($search, $start, 0, $encoding);
         $searchStart = $pos === false ? 0 : $pos + mb_strlen($start, $encoding);
@@ -52,6 +59,9 @@ class StringUtil
         return $this->mbSubstrReplace($search, $replace, $searchStart, $searchEnd - $searchStart, $encoding);
     }
 
+    /**
+     * @param array<int, string> $haystack
+     */
     public function mbInArray(array $haystack, string $needle): bool
     {
         foreach ($haystack as $char) {
@@ -64,7 +74,7 @@ class StringUtil
         return false;
     }
 
-    public function mbUcfirst(string $string, $encoding = self::ENCODING): string
+    public function mbUcfirst(string $string, string $encoding = self::ENCODING): string
     {
         $strlen = mb_strlen($string, $encoding);
         $firstChar = mb_substr($string, 0, 1, $encoding);
@@ -74,7 +84,7 @@ class StringUtil
     }
 
     // trim для utf8
-	public function mbTrim($string): string
+	public function mbTrim(string $string): string
     {
 		//return trim($string, "\xC2\xA0\n");
 		//return preg_replace('~\x{00a0}~siu', '', $string);
@@ -82,7 +92,7 @@ class StringUtil
 	}
 
     // ord для utf8
-    public function mbOrd($s): int
+    public function mbOrd(string $s): int
     {
         return (int) ($s = unpack('C*',$s[0].$s[1].$s[2].$s[3]))&&$s[1]<(1<<7)?$s[1]:
         ($s[1]>239&&$s[2]>127&&$s[3]>127&&$s[4]>127?(7&$s[1])<<18|(63&$s[2])<<12|(63&$s[3])<<6|63&$s[4]:

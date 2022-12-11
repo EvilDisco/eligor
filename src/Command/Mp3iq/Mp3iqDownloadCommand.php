@@ -29,7 +29,7 @@ final class Mp3iqDownloadCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('parse:mp3iq:download')

@@ -27,7 +27,7 @@ final class Mp3iqParserCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('parse:mp3iq')

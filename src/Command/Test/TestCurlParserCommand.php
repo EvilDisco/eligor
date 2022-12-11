@@ -21,7 +21,7 @@ final class TestCurlParserCommand extends Command
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('parser:curl:test')

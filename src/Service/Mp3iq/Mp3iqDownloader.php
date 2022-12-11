@@ -19,7 +19,7 @@ class Mp3iqDownloader
     /**
      * @throws GuzzleException
      */
-    public function download(SymfonyStyle $io, string $remotePath, string $filename): string
+    public function download(SymfonyStyle $io, string $remotePath, string $filename): string|bool
     {
         $fileLocation = $this->getFileLocation($filename);
         $handle = fopen($fileLocation, 'w+');

@@ -19,11 +19,17 @@ class FileLinkService
         $this->fileLinkRepo = $this->em->getRepository(FileLink::class);
     }
 
+    /**
+     * @return array<int, FileLink>
+     */
     public function getNotDownloadedByParser(Parser $parser, ?int $limit = 1): array
     {
         return $this->getByParserAndStatus($parser, FileLinkStatusEnum::NotDownloaded, $limit);
     }
 
+    /**
+     * @return array<int, FileLink>
+     */
     private function getByParserAndStatus(
         Parser $parser,
         FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded,
@@ -63,6 +69,7 @@ class FileLinkService
         $this->em->flush();
     }
 
+    // FIXME: param as single type
     public function save(array|FileLink $data): void
     {
         $fileLinkRepo = $this->em->getRepository(FileLink::class);
