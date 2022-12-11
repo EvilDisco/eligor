@@ -19,12 +19,11 @@ class Mp3iqParser extends ParserService implements ParserInterface
     protected const BASE_URL = 'https://mp3iq.net/m/488415-pervyj-otryad-na-mayake';
     protected const PLAYLIST_EL = 'ul[class="playlist"]';
 
-    public Parser $parser;
+    protected Parser $parser;
 
     public function __construct(
         protected EntityManagerInterface $em,
         protected PantherParser $pantherParser,
-
     )
     {
         parent::__construct($em, $pantherParser);

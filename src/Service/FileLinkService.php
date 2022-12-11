@@ -21,10 +21,19 @@ class FileLinkService
 
     public function getNotDownloadedByParser(Parser $parser, ?int $limit = 1): array
     {
+        return $this->getByParserAndStatus($parser, FileLinkStatusEnum::NotDownloaded, $limit);
+    }
+
+    private function getByParserAndStatus(
+        Parser $parser,
+        FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded,
+        ?int $limit = 1
+    ): array
+    {
         return $this->fileLinkRepo->findBy(
             [
                 'parser' => $parser,
-                'status' => FileLinkStatusEnum::NotDownloaded
+                'status' => $status
             ],
             ['id' => 'ASC'],
             $limit
@@ -33,9 +42,17 @@ class FileLinkService
 
     public function countNotDownloadedByParser(Parser $parser): int
     {
+        return $this->countByParserAndStatus($parser, FileLinkStatusEnum::NotDownloaded);
+    }
+
+    private function countByParserAndStatus(
+        Parser $parser,
+        FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded
+    ): int
+    {
         return $this->fileLinkRepo->count([
             'parser' => $parser,
-            'status' => FileLinkStatusEnum::NotDownloaded
+            'status' => $status
         ]);
     }
 
