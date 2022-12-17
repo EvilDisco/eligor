@@ -2,7 +2,6 @@
 
 namespace App\Command\Mp3iq;
 
-use App\Entity\Parser\FileLink;
 use App\Service\FileLinkService;
 use App\Service\Mp3iq\Mp3iqDownloader;
 use App\Service\Mp3iq\Mp3iqParser;
@@ -71,7 +70,6 @@ final class Mp3iqDownloadCommand extends Command
         }
 
         foreach ($fileLinks as $key => $fileLink) {
-            /** @var FileLink $fileLink */
             $io->section($key + 1 . '. Download ' . $fileLink->getLink());
 
             if ($this->downloader->download($io, $fileLink->getLink(), $fileLink->getTitle())) {

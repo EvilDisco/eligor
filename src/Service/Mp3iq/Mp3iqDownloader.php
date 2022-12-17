@@ -21,7 +21,7 @@ class Mp3iqDownloader
      */
     public function download(SymfonyStyle $io, string $remotePath, string $filename): string|bool
     {
-        $fileLocation = $this->getFileLocation($filename);
+        $fileLocation = $this->getDownloadedFileLocation($filename);
         $handle = fopen($fileLocation, 'w+');
 
         $progress = null;
@@ -63,8 +63,8 @@ class Mp3iqDownloader
         return $this->fileService->getUploadDir() . Mp3iqParser::NAME;
     }
 
-    public function getFileLocation(string $filename): string
+    public function getDownloadedFileLocation(string $filename): string
     {
-        return self::getDownloadFolder() . DIRECTORY_SEPARATOR . $filename;
+        return $this->getDownloadFolder() . DIRECTORY_SEPARATOR . $filename;
     }
 }
