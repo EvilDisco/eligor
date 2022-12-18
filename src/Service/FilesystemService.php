@@ -4,6 +4,8 @@ namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FilesystemService
 {
@@ -15,7 +17,7 @@ class FilesystemService
 
     public function __construct(
         protected Filesystem $filesystem,
-        protected ParameterBagInterface $parameterBag
+        protected ParameterBagInterface $params,
     ) {}
 
     public function saveToFile(string $filePath, string $content): void
@@ -61,18 +63,43 @@ class FilesystemService
 
     public function getRootDir(): string
     {
-         return $this->parameterBag->get('kernel.root_dir');
+         return $this->params->get('kernel.root_dir');
     }
 
     public function getProjectDir(): string
     {
-         return $this->parameterBag->get('kernel.project_dir');
+         return $this->params->get('kernel.project_dir');
     }
 
     public function getWebRootDir(): string
     {
-         return $this->parameterBag->get('kernel.project_dir')
-             . DIRECTORY_SEPARATOR
-             . self::WEB_DIR;
+         return $this->params->get('kernel.project_dir') . DIRECTORY_SEPARATOR . self::WEB_DIR;
+    }
+
+    public function getKernelDir(): string
+    {
+        return $this->params->get('kernel.project_dir');
+    }
+
+    public function getUploadDir(): string
+    {
+        return $this->params->get('upload_dir');
+    }
+
+    public function getFileExtension(SplFileInfo|UploadedFile $file): string
+    {
+        $extension = $file instanceof UploadedFile ? $file->getClientOriginalExtension() : $file->getExtension();
+
+        return strtolower($extension);
+    }
+
+    public function createDirectory(string $path): void
+    {
+        //$this->defaultStorage->createDirectory($path);
+    }
+
+    public function writeFileContent(string $filePath, string $content): void
+    {
+        //$this->defaultStorage->write($filePath, $content);
     }
 }

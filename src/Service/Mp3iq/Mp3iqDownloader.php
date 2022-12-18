@@ -2,7 +2,6 @@
 
 namespace App\Service\Mp3iq;
 
-use App\Service\FileService;
 use App\Service\FilesystemService;
 use Exception;
 use GuzzleHttp\Client;
@@ -13,7 +12,6 @@ class Mp3iqDownloader
 {
     public function __construct(
         protected FilesystemService $filesystem,
-        protected FileService $fileService,
     ) {}
 
     /**
@@ -60,7 +58,7 @@ class Mp3iqDownloader
 
     public function getDownloadFolder(): string
     {
-        return $this->fileService->getUploadDir() . Mp3iqParser::NAME;
+        return $this->filesystem->getUploadDir() . Mp3iqParser::NAME;
     }
 
     public function getDownloadedFileLocation(string $filename): string
