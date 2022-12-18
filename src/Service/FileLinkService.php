@@ -5,19 +5,18 @@ namespace App\Service;
 use App\Entity\Parser\FileLink;
 use App\Entity\Parser\FileLinkStatusEnum;
 use App\Entity\Parser\Parser;
+use App\Repository\FileLinkRepository;
+use App\Service\Mp3iq\Mp3iqMediaManipulator;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class FileLinkService
 {
-    protected EntityRepository $fileLinkRepo;
-
     public function __construct(
         protected EntityManagerInterface $em,
-    )
-    {
-        $this->fileLinkRepo = $this->em->getRepository(FileLink::class);
-    }
+        protected FileLinkRepository $fileLinkRepo,
+        protected Mp3iqMediaManipulator $mediaManipulator,
+    ) {}
 
     /**
      * @return array<int, FileLink>
@@ -33,7 +32,8 @@ class FileLinkService
     private function getByParserAndStatus(
         Parser $parser,
         FileLinkStatusEnum $status = FileLinkStatusEnum::NotDownloaded,
-        ?int $limit = 1
+        ?int $limit = null,
+        string $orderBy = 'id'
     ): array
     {
         return $this->fileLinkRepo->findBy(
@@ -41,14 +41,14 @@ class FileLinkService
                 'parser' => $parser,
                 'status' => $status
             ],
-            ['id' => 'ASC'],
+            [$orderBy => 'ASC'],
             $limit
         );
     }
 
     public function countNotDownloadedByParser(Parser $parser): int
     {
-        return $this->countByParserAndStatus($parser, FileLinkStatusEnum::NotDownloaded);
+        return $this->countByParserAndStatus($parser);
     }
 
     private function countByParserAndStatus(
@@ -72,13 +72,11 @@ class FileLinkService
     // FIXME: param as single type
     public function save(array|FileLink $data): void
     {
-        $fileLinkRepo = $this->em->getRepository(FileLink::class);
-
         if ($data instanceof FileLink) {
             $this->em->persist($data);
         } else {
             foreach ($data as $datum) {
-                if ($fileLinkRepo->findOneBy(['link' => $datum->getLink()])) {
+                if ($this->fileLinkRepo->findOneBy(['link' => $datum->getLink()])) {
                     continue;
                 }
 
@@ -87,5 +85,17 @@ class FileLinkService
         }
 
         $this->em->flush();
+    }
+
+    public function mergeByParser(SymfonyStyle $io, Parser $parser, ?int $limit = 1): void
+    {
+        $fileLinks = $this->getByParserAndStatus($parser, FileLinkStatusEnum::Downloaded, null, 'title');
+        if (count($fileLinks) === 0) {
+            $io->text('nothing to process');
+
+            return;
+        }
+
+        $this->mediaManipulator->processFileLinks($io, $fileLinks, $limit);
     }
 }
