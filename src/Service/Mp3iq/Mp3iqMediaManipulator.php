@@ -21,11 +21,13 @@ class Mp3iqMediaManipulator
     public const MERGED_FOLDER = 'merged';
 
     public function __construct(
-        protected FilesystemService $filesystem,
-        protected Mp3iqDownloader $downloader,
+        protected FilesystemService      $filesystem,
+        protected Mp3iqDownloader        $downloader,
         protected EntityManagerInterface $em,
-        protected FileLinkRepository $fileLinkRepo,
-    ) {}
+        protected FileLinkRepository     $fileLinkRepo,
+    )
+    {
+    }
 
     /**
      * @param SymfonyStyle $io
@@ -104,6 +106,8 @@ class Mp3iqMediaManipulator
             $path = self::getMergedFileLocation($formattedTitle);
             $file->saveFile($path);
 
+            self::fixMergedFileWithMp3val($path);
+
             $completedCounter++;
 
             if ($completedCounter === $limit) {
@@ -118,14 +122,7 @@ class Mp3iqMediaManipulator
         $io->text($message);
 
         if (count($notFoundFiles) > 0) {
-            $io->newLine();
-            $io->text('Some files were not found:');
-            $table = new Table($io);
-            $table
-                ->setHeaders(['Path'])
-                ->setRows($notFoundFiles)
-            ;
-            $table->render();
+            self::renderNotFoundFiles($io, $notFoundFiles);
         }
     }
 
@@ -143,14 +140,13 @@ class Mp3iqMediaManipulator
 
     private static function formatTitle(string $title): string
     {
+        $formattedTitle = $title . '.mp3';
         $airedAt = self::getAiredAt($title);
         if (count($airedAt) > 0) {
             $formattedAiredAt = $airedAt[3] . '.' . $airedAt[2] . '.' . $airedAt[1];
             $title = StringUtil::mbStrReplace($airedAt[0], '', $title);
             $title = StringUtil::mbTrim($title);
             $formattedTitle = sprintf('%s - %s.mp3', $formattedAiredAt, $title);
-        } else {
-            $formattedTitle = $title . '.mp3';
         }
 
         return $formattedTitle;
@@ -171,5 +167,23 @@ class Mp3iqMediaManipulator
     public function getMergedFileLocation(string $filename): string
     {
         return self::getMergedFolder() . DIRECTORY_SEPARATOR . $filename;
+    }
+
+    private static function fixMergedFileWithMp3val(string $path): void
+    {
+        // TODO: win/unix + is mp3val available
+        shell_exec("mp3val '$path' -f -nb -t");
+    }
+
+    private static function renderNotFoundFiles(SymfonyStyle $io, array $notFoundFiles): void
+    {
+        $io->newLine();
+        $io->text('Some files were not found:');
+        $table = new Table($io);
+        $table
+            ->setHeaders(['Path'])
+            ->setRows($notFoundFiles)
+        ;
+        $table->render();
     }
 }
