@@ -55,6 +55,8 @@ class Mp3iqMediaManipulator
                 continue;
             }
 
+            // TODO: file content check - can be dummy file, not media
+
             $title = $fileLink->getTitle();
 
             $progressBar->setMessage($title, 'filename');
